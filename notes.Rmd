@@ -1,70 +1,11 @@
----
-title: "Gene expresssion analysis"
-output: html_notebook
----
-
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-
-```{r}
-library(ggplot2)
-file<-"https://gist.githubusercontent.com/stephenturner/806e31fce55a8b7175af/raw/1a507c4c3f9f1baaa3a69187223ff3d3050628d4/results.txt"
-RNAseq<-read.table(file,header = TRUE)
-#add a new coloum
-RNAseq$geneexpression<-"NO"
-#differentiate between up and down regulated genes:
-RNAseq$geneexpression[RNAseq$log2FoldChange>1 & RNAseq$pvalue<0.01]<-"UP"
-RNAseq$geneexpression[RNAseq$log2FoldChange<(-1) & RNAseq$pvalue<0.01]<-"DOWN"
-table(RNAseq$geneexpression)
-```
-
-
-```{r}
-ggplot(data=RNAseq,aes(x=log2FoldChange,y=-log10(pvalue),col=geneexpression),label = delabel)+geom_point(size=2)+ggtitle("Volcano plot")+
-scale_color_manual(values = c("#00AFBB", "grey", "#FFDB6D"), # to set the colours of our variable
-                   labels = c("Downregulated", "Not significant", "Upregulated"))+coord_cartesian(ylim = c(0, 10), xlim = c(-2, 2))
-```
-
-
-```{r}
-write.csv(RNAseq[RNAseq$geneexpression=="UP",],file = "upregulated.csv",row.names = T)
-```
-
-
-```{r}
-write.csv(RNAseq[RNAseq$geneexpression=="DOWN",],file = "downregulated.csv",row.names = T)
-```
-
-```{r}
-library(dplyr)
-setwd("C:/Users/maram/OneDrive/Documents/Hackbio")
-upregulated<-read.csv(file = "upregulated.csv",header = TRUE)
-upregulated$X<-NULL
-print(upregulated)
-topregulated<-upregulated[1:5,]
-print(topregulated)
-
-
-```
-```{r}
-``
-
-
-```
+# Interpretation:
 
 From the upregulated genes we have selected 5 genes: 
 <ul><li> <B>EMILIN2:</B> elastin microfibril interfacer 2 is a protein coding gene predicted to enable extracellular matrix constituent conferring elasticity. Predicted to be involved in cell adhesion. Located in extracellular region. [provided by Alliance of Genome Resources, Apr 2022] </li>
 <li> <B>POU3F4:</B> POU class 3 homeobox 4 is a protein coding gene that encodes a member of the POU-III class of neural transcription factors. This family member plays a role in inner ear development. The protein is thought to be involved in the mediation of epigenetic signals which induce striatal neuron-precursor differentiation. Mutations in this gene are associated with X chromosome-linked nonsyndromic mixed deafness. [provided by RefSeq, Dec 2012] </li>
 <li><B>VEPH1:</B>ventricular zone expressed PH domain containing 1 is a protein coding gene predicted to enable phosphatidylinositol-5-phosphate binding activity. Involved in negative regulation of SMAD protein signal transduction and negative regulation of transforming growth factor beta receptor signaling pathway. Predicted to be active in plasma membrane. [provided by Alliance of Genome Resources, Apr 2022] </li>
 <li><B>DTHD1:</B> death domain containing 1 encodes a protein which contains a death domain. Death domain-containing proteins function in signaling pathways and formation of signaling complexes, as well as the apoptosis pathway. Alternative splicing results in multiple transcript variants. [provided by RefSeq, Oct 2012]</li></ul>
-```{r}
-downregulated<-read.csv(file="downregulated.csv",header = TRUE)
-downregulated$X<-NULL
-print(downregulated)
-topdown<-downregulated[1:5,]
-print(topdown)
-```
+
 From the downregulated genes we have selected 5 genes: 
 <ul><li> <B>	TBX5:</B> T-box transcription factor 5 is a protein coding gene that is a member of a phylogenetically conserved family of genes that share a common DNA-binding domain, the T-box. T-box genes encode transcription factors involved in the regulation of developmental processes. This gene is closely linked to related family member T-box 3 (ulnar mammary syndrome) on human chromosome 12. The encoded protein may play a role in heart development and specification of limb identity. Mutations in this gene have been associated with Holt-Oram syndrome, a developmental disorder affecting the heart and upper limbs. Several transcript variants encoding different isoforms have been described for this gene. [provided by RefSeq, Jul 2008]</li>
 <li> <B>IFITM1:</B> Interferon-induced transmembrane (IFITM) proteins are a family of interferon induced antiviral proteins. The family contains five members, including IFITM1, IFITM2 and IFITM3 that belong to the CD225 superfamily. The protein encoded by this gene restricts cellular entry by diverse viral pathogens, such as influenza A virus, Ebola virus and Sars-CoV-2. [provided by RefSeq, Nov 2021] </li>
@@ -72,4 +13,4 @@ From the downregulated genes we have selected 5 genes:
 <li><B>CAV2</B>The protein encoded by this gene is a major component of the inner surface of caveolae, small invaginations of the plasma membrane, and is involved in essential cellular functions, including signal transduction, lipid metabolism, cellular growth control and apoptosis. This protein may function as a tumor suppressor. This gene and related family member (CAV1) are located next to each other on chromosome 7, and express colocalizing proteins that form a stable hetero-oligomeric complex. Alternatively spliced transcript variants encoding different isoforms have been identified for this gene. Additional isoforms resulting from the use of alternate in-frame translation initiation codons have also been described, and shown to have preferential localization in the cell (PMID:11238462). [provided by RefSeq, May 2011]</li>
 <li><b>TNN</b> tenascin N predicted to enable integrin binding activity. Predicted to be involved in several processes, including generation of neurons; negative regulation of canonical Wnt signaling pathway involved in osteoblast differentiation; and negative regulation of osteoblast differentiation. Predicted to act upstream of or within axonogenesis. Predicted to be located in extracellular matrix and neuron projection. Predicted to be active in collagen-containing extracellular matrix and extracellular space. [provided by Alliance of Genome Resources, Apr 2022]</li></ul>
 
-```{r}
+
